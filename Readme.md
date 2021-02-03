@@ -32,3 +32,5 @@ DATABASE_URL=mysql://app_user:helloworld@db:3306/app_db?serverVersion=5.7
 
 You could change the name, user and password of the database in the `env` file at the root of the project.
 
+5. Run `composer install` inside PHP container
+
