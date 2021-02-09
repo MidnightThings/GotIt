@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Datetime;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -49,6 +50,8 @@ class User implements UserInterface
 
     public function __construct()
     {
+        $this->crdate = new Datetime();
+        $this->tstamp = new Datetime();
         $this->kurs = new ArrayCollection();
     }
 
