@@ -34,3 +34,4 @@ You could change the name, user and password of the database in the `env` file a
 
 5. Run `composer install` inside PHP container
 
+6. Run `php bin/console doctrine:migrations:migrate` to update the DB
