@@ -6,6 +6,7 @@ use App\Repository\SessionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=SessionRepository::class)
@@ -50,8 +51,15 @@ class Session
      */
     private $sessionMembers;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Frage::class, cascade={"persist", "remove"})
+     */
+    private $frage;
+
     public function __construct()
     {
+        $this->crdate = new Datetime();
+        $this->tstamp = new Datetime();
         $this->sessionMembers = new ArrayCollection();
     }
 
@@ -146,6 +154,18 @@ class Session
                 $sessionMember->setSession(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFrage(): ?Frage
+    {
+        return $this->frage;
+    }
+
+    public function setFrage(?Frage $frage): self
+    {
+        $this->frage = $frage;
 
         return $this;
     }
