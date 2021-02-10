@@ -35,12 +35,6 @@ class SessionMemberFrage
     private $frage;
 
     /**
-     * @ORM\OneToOne(targetEntity=SessionMember::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $sessionmember;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $content;
@@ -54,6 +48,11 @@ class SessionMemberFrage
      * @ORM\Column(type="integer")
      */
     private $ratingcount;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SessionMember::class, inversedBy="sessionMemberFrages")
+     */
+    private $sessionmember;
 
     public function __construct()
     {
@@ -102,18 +101,6 @@ class SessionMemberFrage
         return $this;
     }
 
-    public function getSessionmember(): ?SessionMember
-    {
-        return $this->sessionmember;
-    }
-
-    public function setSessionmember(SessionMember $sessionmember): self
-    {
-        $this->sessionmember = $sessionmember;
-
-        return $this;
-    }
-
     public function getContent(): ?string
     {
         return $this->content;
@@ -146,6 +133,18 @@ class SessionMemberFrage
     public function setRatingcount(int $ratingcount): self
     {
         $this->ratingcount = $ratingcount;
+
+        return $this;
+    }
+
+    public function getSessionmember(): ?SessionMember
+    {
+        return $this->sessionmember;
+    }
+
+    public function setSessionmember(?SessionMember $sessionmember): self
+    {
+        $this->sessionmember = $sessionmember;
 
         return $this;
     }
