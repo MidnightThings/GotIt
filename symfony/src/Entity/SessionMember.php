@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SessionMemberRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
@@ -35,15 +37,15 @@ class SessionMember
     private $session;
 
     /**
-     * @ORM\OneToOne(targetEntity=SessionMemberFrage::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToMany(targetEntity=SessionMemberFrage::class, mappedBy="sessionmember")
      */
-    private $sessionMemberFrage;
+    private $sessionMemberFrages;
 
     public function __construct()
     {
         $this->crdate = new Datetime();
         $this->tstamp = new Datetime();
+        $this->sessionMemberFrages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,14 +89,32 @@ class SessionMember
         return $this;
     }
 
-    public function getSessionmemberFrage(): ?SessionMemberFrage
+    /**
+     * @return Collection|SessionMemberFrage[]
+     */
+    public function getSessionMemberFrages(): Collection
     {
-        return $this->sessionMemberFrage;
+        return $this->sessionMemberFrages;
     }
 
-    public function setSessionmemberFrage(SessionMemberFrage $sessionMemberFrage): self
+    public function addSessionMemberFrage(SessionMemberFrage $sessionMemberFrage): self
     {
-        $this->sessionMemberFrage = $sessionMemberFrage;
+        if (!$this->sessionMemberFrages->contains($sessionMemberFrage)) {
+            $this->sessionMemberFrages[] = $sessionMemberFrage;
+            $sessionMemberFrage->setSessionmember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionMemberFrage(SessionMemberFrage $sessionMemberFrage): self
+    {
+        if ($this->sessionMemberFrages->removeElement($sessionMemberFrage)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionMemberFrage->getSessionmember() === $this) {
+                $sessionMemberFrage->setSessionmember(null);
+            }
+        }
 
         return $this;
     }
