@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SessionMemberRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=SessionMemberRepository::class)
@@ -32,6 +33,18 @@ class SessionMember
      * @ORM\JoinColumn(nullable=false)
      */
     private $session;
+
+    /**
+     * @ORM\OneToOne(targetEntity=SessionMemberFrage::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sessionMemberFrage;
+
+    public function __construct()
+    {
+        $this->crdate = new Datetime();
+        $this->tstamp = new Datetime();
+    }
 
     public function getId(): ?int
     {
@@ -70,6 +83,18 @@ class SessionMember
     public function setSession(?Session $session): self
     {
         $this->session = $session;
+
+        return $this;
+    }
+
+    public function getSessionmemberFrage(): ?SessionMemberFrage
+    {
+        return $this->sessionMemberFrage;
+    }
+
+    public function setSessionmemberFrage(SessionMemberFrage $sessionMemberFrage): self
+    {
+        $this->sessionMemberFrage = $sessionMemberFrage;
 
         return $this;
     }

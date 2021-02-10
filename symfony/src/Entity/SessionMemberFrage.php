@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SessionMemberFrageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=SessionMemberFrageRepository::class)
@@ -53,6 +54,12 @@ class SessionMemberFrage
      * @ORM\Column(type="integer")
      */
     private $ratingcount;
+
+    public function __construct()
+    {
+        $this->crdate = new Datetime();
+        $this->tstamp = new Datetime();
+    }
 
     public function getId(): ?int
     {

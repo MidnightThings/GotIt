@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FrageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Datetime;
 
 /**
  * @ORM\Entity(repositoryClass=FrageRepository::class)
@@ -37,6 +38,12 @@ class Frage
      * @ORM\Column(type="string", length=255)
      */
     private $content;
+
+    public function __construct()
+    {
+        $this->crdate = new Datetime();
+        $this->tstamp = new Datetime();
+    }
 
     public function getId(): ?int
     {
