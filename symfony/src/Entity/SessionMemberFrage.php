@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SessionMemberFrageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
@@ -29,12 +31,6 @@ class SessionMemberFrage
     private $tstamp;
 
     /**
-     * @ORM\OneToOne(targetEntity=Frage::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $frage;
-
-    /**
      * @ORM\Column(type="text")
      */
     private $content;
@@ -54,10 +50,22 @@ class SessionMemberFrage
      */
     private $sessionmember;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Frage::class, inversedBy="sessionMemberFrages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $frage;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=SessionMember::class, mappedBy="tmpRateAnswer")
+     */
+    private $sessionMembersAnswer;
+
     public function __construct()
     {
         $this->crdate = new Datetime();
         $this->tstamp = new Datetime();
+        $this->sessionMembersAnswer = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,18 +93,6 @@ class SessionMemberFrage
     public function setTstamp(\DateTimeInterface $tstamp): self
     {
         $this->tstamp = $tstamp;
-
-        return $this;
-    }
-
-    public function getFrage(): ?Frage
-    {
-        return $this->frage;
-    }
-
-    public function setFrage(Frage $frage): self
-    {
-        $this->frage = $frage;
 
         return $this;
     }
@@ -145,6 +141,45 @@ class SessionMemberFrage
     public function setSessionmember(?SessionMember $sessionmember): self
     {
         $this->sessionmember = $sessionmember;
+
+        return $this;
+    }
+
+    public function getFrage(): ?Frage
+    {
+        return $this->frage;
+    }
+
+    public function setFrage(?Frage $frage): self
+    {
+        $this->frage = $frage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SessionMember[]
+     */
+    public function getSessionMembersAnswer(): Collection
+    {
+        return $this->sessionMembersAnswer;
+    }
+
+    public function addSessionMembersAnswer(SessionMember $sessionMembersAnswer): self
+    {
+        if (!$this->sessionMembersAnswer->contains($sessionMembersAnswer)) {
+            $this->sessionMembersAnswer[] = $sessionMembersAnswer;
+            $sessionMembersAnswer->addTmpRateAnswer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionMembersAnswer(SessionMember $sessionMembersAnswer): self
+    {
+        if ($this->sessionMembersAnswer->removeElement($sessionMembersAnswer)) {
+            $sessionMembersAnswer->removeTmpRateAnswer($this);
+        }
 
         return $this;
     }

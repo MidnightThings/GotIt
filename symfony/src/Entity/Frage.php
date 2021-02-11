@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FrageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Datetime;
 
@@ -39,10 +41,16 @@ class Frage
      */
     private $content;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SessionMemberFrage::class, mappedBy="frage")
+     */
+    private $sessionMemberFrages;
+
     public function __construct()
     {
         $this->crdate = new Datetime();
         $this->tstamp = new Datetime();
+        $this->sessionMemberFrages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,6 +102,36 @@ class Frage
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SessionMemberFrage[]
+     */
+    public function getSessionMemberFrages(): Collection
+    {
+        return $this->sessionMemberFrages;
+    }
+
+    public function addSessionMemberFrage(SessionMemberFrage $sessionMemberFrage): self
+    {
+        if (!$this->sessionMemberFrages->contains($sessionMemberFrage)) {
+            $this->sessionMemberFrages[] = $sessionMemberFrage;
+            $sessionMemberFrage->setFrage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionMemberFrage(SessionMemberFrage $sessionMemberFrage): self
+    {
+        if ($this->sessionMemberFrages->removeElement($sessionMemberFrage)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionMemberFrage->getFrage() === $this) {
+                $sessionMemberFrage->setFrage(null);
+            }
+        }
 
         return $this;
     }
