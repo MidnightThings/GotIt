@@ -1,0 +1,37 @@
+.courseSelectionContainer {
+    margin: 20px; /*TODO: better grid/positiong*/
+}
+
+.pageTitle {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.btnContainer {
+    margin-bottom: 10px;
+}
+
+.courseList {
+    border: 1px solid #cfcfcf;
+}
+
+.course {
+    padding: 20px 5px;
+    width: 100%;
+    border-bottom: 1px solid #cfcfcf;
+}
+
+.course:last-child {
+    border-bottom: 0;
+}
+
+button {
+    padding: 4px 6px;
+    background-color: #67a772;
+    border: 1px solid #cfcfcf;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
