@@ -4,10 +4,12 @@ function newCourse() {
     $.ajax({
         url: 'http://localhost/course/add',
         type: 'POST',
+        data: 'test2', //TODO: get name
         success: function(data) {
+            console.log(data)
             if (data != undefined || data != '' || data != []) {
-                //window.location.href = `http://localhost/course/edit/${data.id}`;
-                editCourse(data.id);
+                console.log('success')
+                window.location.href = `http://localhost/course/edit/${data.id}`;
             } else {
                 console.log('error');
                 //do stuff
@@ -44,19 +46,43 @@ function startCourse(id) {
 function editCourse(id) {
     console.log('editCourse id: ', id);
 
+    let courseData = {
+        id: id,
+        name: 'test'
+    };
+
+    $.ajax({
+        url : 'http://localhost/course/edit',
+        type : 'POST',
+        data : courseData, //TODO: get data
+        success: function(data) {
+            console.log(data)
+
+            if (data != undefined || data != '' || data != []) {
+                console.log('success')
+                //window.location.href = `http://localhost/coursesession/' + ${data.code}`;
+            } else {
+                console.log('error');
+                //do stuff
+            }
+        },
+        error : function(request) {
+            console.log(JSON.stringify(request));
+        }
+    });
+
     //maybe find better solution
-    window.location.href = `http://localhost/course/edit/' + ${id}`;
+    //window.location.href = `http://localhost/course/edit/' + ${id}`;
 }
 
 function deleteCourse(id) {
     console.log('deleteCourse id: ', id);
 
     $.ajax({
-        url: 'http://localhost/course/delete',
-        type: 'POST',
-        data: id,
+        url: `http://localhost/course/delete/${id}`,
+        type: 'GET',
         success: function(data) {
-            if (data != undefined || data != '' || data != []) {
+            if (data != undefined || data != '' || data != []) { //TODO: check if response ok
                 console.log('deleted successfully');
                 removeCourseElement(id);
             }
@@ -65,5 +91,5 @@ function deleteCourse(id) {
 }
 
 function removeCourseElement(id) {
-    $(`#course_${id}`).remove();
+    $(`#course_${id}`).remove(); //this or reload page
 }
