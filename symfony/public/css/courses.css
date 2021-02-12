@@ -1,0 +1,53 @@
+.courseSelectionContainer, .courseOverviewContainer {
+    margin: 20px; /*TODO: better grid/positiong*/
+}
+
+.pageTitle {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.btnContainer {
+    margin-bottom: 10px;
+}
+
+.courseList, .questionList {
+    border: 1px solid #cfcfcf;
+}
+
+.course, .question {
+    padding: 20px 5px;
+    width: 100%;
+    border-bottom: 1px solid #cfcfcf;
+}
+
+.question {
+    padding: 0 5px;
+}
+
+.questionContents{
+    width: 80%;
+}
+
+.inline{
+    display: inline;
+}
+
+.course:last-child, .question:last-child {
+    border-bottom: 0;
+}
+
+.titleContainer {
+    width: 100%;
+}
+
+button {
+    padding: 4px 6px;
+    background-color: #67a772;
+    border: 1px solid #cfcfcf;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+

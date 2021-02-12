@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Course Selection{% endblock %}
+
+{% block stylesheets %}
+    <link href="/css/courses.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/courseselection.js"></script>
+
+    
+{% endblock %}
+
+{% block body %}
+    <div class="courseSelectionContainer">
+       
+        <div class="pageTitle">
+            <h1>Course Selection</h1>
+        </div>
+
+        <div class="btnContainer">
+            <button id="newCourseBtn" onclick="newCourse()">+ New course</button>
+        </div>
+
+        <div class="courseList">
+            {% for course in courses %}
+                <div id="course_{{ course.id }}" class="course">
+                    <span class="courseName">{{ course.name }}</span>
+                    <button class="courseBtn" onclick="startCourse({{ course.id }})">start</button>
+                    <button class="courseBtn" onclick="editCourse({{ course.id }})">edit</button>
+                    <button class="courseBtn" onclick="deleteCourse({{ course.id }})">delete</button>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
