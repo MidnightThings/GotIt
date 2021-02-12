@@ -41,11 +41,17 @@ class SessionMember
      */
     private $sessionMemberFrages;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=SessionMemberFrage::class, inversedBy="sessionMembersAnswer")
+     */
+    private $tmpRateAnswer;
+
     public function __construct()
     {
         $this->crdate = new Datetime();
         $this->tstamp = new Datetime();
         $this->sessionMemberFrages = new ArrayCollection();
+        $this->tmpRateAnswer = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,6 +121,30 @@ class SessionMember
                 $sessionMemberFrage->setSessionmember(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SessionMemberFrage[]
+     */
+    public function getTmpRateAnswer(): Collection
+    {
+        return $this->tmpRateAnswer;
+    }
+
+    public function addTmpRateAnswer(SessionMemberFrage $tmpRateAnswer): self
+    {
+        if (!$this->tmpRateAnswer->contains($tmpRateAnswer)) {
+            $this->tmpRateAnswer[] = $tmpRateAnswer;
+        }
+
+        return $this;
+    }
+
+    public function removeTmpRateAnswer(SessionMemberFrage $tmpRateAnswer): self
+    {
+        $this->tmpRateAnswer->removeElement($tmpRateAnswer);
 
         return $this;
     }

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Entity\Session;
 use App\Entity\SessionMember;
+use App\Entity\SessionMemberFrage;
+use App\Entity\Frage;
 
 class ApiController extends AbstractController
 {
@@ -45,7 +47,6 @@ class ApiController extends AbstractController
          * 3. return JSON
          */
         
-
         $sessionMember = $entityManager->getRepository(SessionMember::class)->find($token);
         $session = $sessionMember->getSession();
         $status = strtoupper($session->getStatus());
@@ -55,10 +56,7 @@ class ApiController extends AbstractController
             "id" => ""
         ];
 
-        $answers = [
-            "content" => "",
-            "id" => ""
-        ];
+        $answers = [];
 
         if($status == "QUESTION"){
             $frage = $session->getFrage();
@@ -67,7 +65,26 @@ class ApiController extends AbstractController
                 "id" => $frage->getId()
             ];
         }elseif($status == "RATE"){
+            $answerObject = $sessionMember->getTmpRateAnswer();
+            if(!count($answerObject)){
+                $sessionRepository = $entityManager->getRepository(Session::class);
+                $answerResult = $sessionRepository->getAnswers($token);
+                shuffle($answerResult);
+                $answerArray = array_slice($answerResult,0,3);
+                foreach($answerArray as $answer){
+                    $answerObject = $entityManager->getRepository(SessionMemberFrage::class)->find($answer["id"]);
+                    $sessionMember->addTmpRateAnswer($answerObject);
+                }
+                $entityManager->persist($sessionMember);
+                $entityManager->flush();
+            }else{
+                //print_r($answerArray[0]);die;
+                foreach($answerObject as $answer){
+                    $answerArray[] = ["content" => $answer->getContent(), "id" => $answer->getId()];
+                }
+            }
 
+            $answers = $answerArray;
         }
         $pollingArray = [
                 "status" => $status,
@@ -84,12 +101,23 @@ class ApiController extends AbstractController
     public function courseSessionAnswer(EntityManagerInterface $entityManager, Request $request):Response
     {
 
-        /**
-         * 1. check if user exists
-         * 2. create new answer
-         */
-        
-        print_r($request);die;
+        $frage = $entityManager->getRepository(Frage::class)->find(($request->request->get("questionId")));
+        if(!isset($frage)){
+            return new Response();
+        }
+        $sessionMember =  $entityManager->getRepository(SessionMember::class)->find(($request->request->get("token")));
+        if(!isset($sessionMember)){
+            return new Response();
+        }
+        $sessionMemberFrage = new SessionMemberFrage();
+        $sessionMemberFrage->setSessionmember($sessionMember);
+        $sessionMemberFrage->setFrage($frage);
+        $sessionMemberFrage->setContent($request->request->get("answer"));
+        $sessionMemberFrage->setRating(0);
+        $sessionMemberFrage->setRatingCount(0);
+
+        $entityManager->persist($sessionMemberFrage);
+        $entityManager->flush();
         
         return new Response();
     }
@@ -99,15 +127,18 @@ class ApiController extends AbstractController
      */
     public function courseSessionRating(EntityManagerInterface $entityManager, Request $request):Response
     {
-
-        /**
-         * 1. check if user exists
-         * 2. check if answer exists
-         * 3. change rating
-         */
-        
-        print_r($request);die;
-        
+        foreach($request->request->get("ratings") as $rating){
+            $sessionMemberFrage = $entityManager->getRepository(SessionMemberFrage::class)->find($rating["answerId"]);
+            if(!isset($sessionMemberFrage)){
+                return new Response();
+            }
+            if($rating["rating"] == "-1"){
+                $sessionMemberFrage->setRating($sessionMemberFrage->getRating() - 1);
+            }else{
+                $sessionMemberFrage->setRating($sessionMemberFrage->getRating() - 1);
+            }
+            $sessionMemberFrage->setRatingCount($sessionMemberFrage->getRatingCount() + 1);
+        }
         return new Response();
     }
 }

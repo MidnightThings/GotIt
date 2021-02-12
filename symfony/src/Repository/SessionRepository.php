@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Session;
+use App\Entity\SessionMember;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +18,16 @@ class SessionRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Session::class);
+    }
+
+    public function getAnswers($userToken){
+        $qb = $this->createQueryBuilder("s");
+        $qb->select("smf.content, smf.id");
+        $qb->leftJoin("s.sessionMembers", "sm");
+        $qb->leftJoin("sm.sessionMemberFrages", "smf");
+        $qb->where("sm.id != :userToken");
+        $qb->setParameter("userToken", $userToken);
+        return $qb->getQuery()->getResult();
     }
 
     // /**
