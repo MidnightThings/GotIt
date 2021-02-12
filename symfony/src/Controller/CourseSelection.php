@@ -3,81 +3,78 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use Doctrine\ORM\EntityManagerInterface;
 
-
-use App\test\Course; //delete later
+use App\Entity\Kurs;
 
 class CourseSelection extends AbstractController
 {
+
     /**
-     * @Route("/courseselection", name="courseselection")
+     * @Route("/course", name="course")
      */
-    public function courseSelection(): Response
+    public function course(EntityManagerInterface $entityManager): Response
     {
-       // $courses = [];
-
-        //$courses = getCourses();
-
-        //delete later
-        $course1 = new Course();
-        $course1->id = 1;
-        $course1->name = 'course1';
-
-        $course2 = new Course();
-        $course2->id = 2;
-        $course2->name = 'course2';
-
-        $course3 = new Course();
-        $course3->id = 3;
-        $course3->name = 'course3';
-
-        $course4 = new Course();
-        $course4->id = 4;
-        $course4->name = 'course4';
-
-        $courses = array($course1, $course2, $course3, $course4);
-        //delete later
-
+        $courses = $entityManager->getRepository(Kurs::class)->findAll();
 
         return $this->render("courseselection/courseselection.html.twig", ['courses' => $courses]);
     }
 
-
-
-    public function selectCourse($id)
+    /**
+     * @Route("/course/add", name="addcourse")
+     */
+    public function addCourse(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) : JsonResponse
     {
-        //call api to get course
+        $courses = $entityManager->getRepository(Kurs::class);
+        $user = $tokenStorage->getToken()->getUser();
+
+        $course = new Kurs();
+        $course->setName($request->getContent());
+        $course->setUser($user);
+
+        $entityManager->persist($course);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Course added successfully', 'id' => $course->getId()], 200);
+    }
+    
+
+    /**
+     * @Route("/course/edit", name="editcourse")
+     */
+    public function editCourse(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) : JsonResponse
+    {
+        $course = $entityManager->getRepository(Kurs::class)->find($request->get('id'));
+        if (!$course) {
+            throw $this->createNotFoundException('No Course found.');
+        }
+
+        $course->setName($request->get('name'));
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Course edited successfully.'], 200);
     }
 
-    public function getCourses()
+    /**
+     * @Route("/course/delete/{id}", name="deletecourse")
+     */
+    public function deleteCourse($id, EntityManagerInterface $entityManager) : JsonResponse
     {
-        //call api to get all courses
+        $course = $entityManager->getRepository(Kurs::class)->find($id);
 
-        $courses = [];
+        if (!$course) {
+            throw $this->createNotFoundException('No Course found.');
+        }
 
-        return $courses;
-    }
+        $entityManager->remove($course);
+        $entityManager->flush();
 
-    public function addCourse($course)
-    {
-        //call api to add course
-    }
-
-    public function editCourse($id)
-    {
-        //call api to edit course
-    }
-
-    public function deleteCourse($id)
-    {
-        //call api to delete course
+        return new JsonResponse(['message' => 'Course deleted successfully.'], 200);
     }
 
 }
