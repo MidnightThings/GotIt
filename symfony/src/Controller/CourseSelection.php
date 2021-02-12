@@ -22,7 +22,7 @@ class CourseSelection extends AbstractController
     {
         $courses = $entityManager->getRepository(Kurs::class)->findAll();
 
-        return $this->render("courseselection/courseselection.html.twig", ['courses' => $courses]);
+        return $this->render("courses/courseselection.html.twig", ['courses' => $courses]);
     }
 
     /**
@@ -45,16 +45,16 @@ class CourseSelection extends AbstractController
     
 
     /**
-     * @Route("/course/edit", name="editcourse")
+     * @Route("/course/edit/{courseID}", name="editcourse")
      */
-    public function editCourse(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) : JsonResponse
+    public function editCourse(Request $request, $courseID, EntityManagerInterface $entityManager) : JsonResponse
     {
-        $course = $entityManager->getRepository(Kurs::class)->find($request->get('id'));
+        $course = $entityManager->getRepository(Kurs::class)->find($courseID);
         if (!$course) {
             throw $this->createNotFoundException('No Course found.');
         }
 
-        $course->setName($request->get('name'));
+        $course->setName($request->getContent());
         $entityManager->flush();
 
         return new JsonResponse(['message' => 'Course edited successfully.'], 200);

@@ -9,7 +9,7 @@ function newCourse() {
             console.log(data)
             if (data != undefined || data != '' || data != []) {
                 console.log('success')
-                window.location.href = `http://localhost/course/edit/${data.id}`;
+                window.location.href = `http://localhost/course/${data.id}`;
             } else {
                 console.log('error');
                 //do stuff
@@ -48,7 +48,7 @@ function editCourse(id) {
 
     let courseData = {
         id: id,
-        name: 'test'
+        name: 'newName'
     };
 
     $.ajax({

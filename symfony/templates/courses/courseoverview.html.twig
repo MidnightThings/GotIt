@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editing course: {{ course.name }}{% endblock %}
+
+{% block stylesheets %}
+    <link href="/css/courses.css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/courseoverview.js"></script>
+    <script src="/js/courseselection.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="courseOverviewContainer">
+        <span class="titleContainer">
+            <div class="pageTitle inline">
+                <input type="text" onchange="changeCourseName({{ course.id }}, this.value)" value="{{ course.name }}">
+            </div>
+            <div class="btnContainer inline">
+                <button id="startCourseBtn" onclick="startCourse({{ course.id }})">Start Course</button>
+            </div>
+        </span>
+        <div class="btnContainer">
+            <button onclick="newQuestion({{ course.id }})" id="newQuestionBtn">+ New question</button>
+        </div>
+        <div class="questionList">
+                {% for question in questions %}
+                    <div>
+                         <span id="question_{{ question.id }}" class="question">
+                            <input class="questionContents" type="text" onchange="changeQuestion({{ course.id }}, {{ question.id }}, this.value)" value="{{ question.content }}">
+                            <button id="questionBtn" onclick="deleteQuestion({{ course.id }}, {{ question.id }})">delete</button>
+                        </span>
+                    </div>
+                {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}
