@@ -4,10 +4,17 @@
 {% endblock %}
 {% block title %}Session in progress...{% endblock %}
 {% block body %}
-<div>
+<div class="code-box">
   {{code}}
 </div>
-
-
-
+<div class="information">
+  Fuer Teilnehmer eroeffnet!
+  Status: {{status}}
+</div>
+<a href="/session/{{code}}/next" class="next-step-btn">
+  Next step
+</a>
+<div class="member-count">
+  Teilnehmer: 0
+</div>
 {% endblock %}
