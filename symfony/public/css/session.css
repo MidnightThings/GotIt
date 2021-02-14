@@ -2,4 +2,31 @@
   width: 20%;
   margin-left: 40%;
   margin-top: 5%;
+  font-size: 35px;
+  text-align: center;
+  border: 2px solid black;
+}
+
+.information {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10%;
+  margin-left: 35%;
+  width: 30%;
+}
+
+.member-count {
+  font-size: 15px;
+  text-align: center;
+  margin-top: 10%;
+  width: 20%;
+  margin-left: 40%;
+}
+
+.next-step-btn {
+  width: 10%;
+  height: 10%;
+  margin-left: 45%;
+  margin-top: 10%;
+  text-align: center;
 }

@@ -46,6 +46,11 @@ class Frage
      */
     private $sessionMemberFrages;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $sortorder;
+
     public function __construct()
     {
         $this->crdate = new Datetime();
@@ -90,6 +95,17 @@ class Frage
     public function setKurs(?Kurs $kurs): self
     {
         $this->kurs = $kurs;
+        if($this->sortorder === 0) {
+            $allQuestions = $kurs->getFrages();
+            $highestOrder = -1;
+            if(count($allQuestions) > 0) {
+                foreach($allQuestions as $question) {
+                    $order = $question->getSortorder();
+                    if($highestOrder < $order) $highestOrder = $order;
+                }
+            }
+            $this->sortorder = $highestOrder + 1;
+        }
 
         return $this;
     }
@@ -132,6 +148,18 @@ class Frage
                 $sessionMemberFrage->setFrage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSortorder(): ?int
+    {
+        return $this->sortorder;
+    }
+
+    public function setSortorder(int $sortorder): self
+    {
+        $this->sortorder = $sortorder;
 
         return $this;
     }

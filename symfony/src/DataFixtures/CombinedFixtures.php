@@ -48,11 +48,14 @@ class CombinedFixtures extends Fixture
         ];
 
         $questions = [];
+        $order = 0;
 
         foreach ($contents as $content) {
             $question = new Frage();
             $question->setKurs($course);
             $question->setContent($content);
+            $question->setSortorder($order);
+            $order++;
 
             $questions[] = $question;
         }
