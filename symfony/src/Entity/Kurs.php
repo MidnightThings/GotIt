@@ -43,6 +43,7 @@ class Kurs
 
     /**
      * @ORM\OneToMany(targetEntity=Frage::class, mappedBy="kurs")
+     * @ORM\OrderBy({"sortorder" = "ASC"})
      */
     private $frages;
 
