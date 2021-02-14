@@ -27,7 +27,7 @@
             {% for course in courses %}
                 <div id="course_{{ course.id }}" class="course">
                     <span class="courseName">{{ course.name }}</span>
-                    <button class="courseBtn" onclick="startCourse({{ course.id }})">start</button>
+                    <a href="/session/start/{{course.id}}">start</a>
                     <button class="courseBtn" onclick="editCourse({{ course.id }})">edit</button>
                     <button class="courseBtn" onclick="deleteCourse({{ course.id }})">delete</button>
                 </div>
