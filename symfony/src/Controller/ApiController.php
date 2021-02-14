@@ -78,7 +78,6 @@ class ApiController extends AbstractController
                 $entityManager->persist($sessionMember);
                 $entityManager->flush();
             }else{
-                //print_r($answerArray[0]);die;
                 foreach($answerObject as $answer){
                     $answerArray[] = ["content" => $answer->getContent(), "id" => $answer->getId()];
                 }
@@ -139,6 +138,11 @@ class ApiController extends AbstractController
             }
             $sessionMemberFrage->setRatingCount($sessionMemberFrage->getRatingCount() + 1);
         }
+
+        $session = $sessionMemberFrage->getSessionMember()[0]->getSession();
+        $session->setCountRating($session->getCountRating() + 1);
+        $entityManager->persist($session);
+        $entityManager->flush();
         return new Response();
     }
 }

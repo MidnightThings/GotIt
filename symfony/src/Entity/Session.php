@@ -56,6 +56,11 @@ class Session
      */
     private $frage;
 
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $countRatings = 0;
+
     public function __construct()
     {
         $this->crdate = new Datetime();
@@ -166,6 +171,18 @@ class Session
     public function setFrage(?Frage $frage): self
     {
         $this->frage = $frage;
+
+        return $this;
+    }
+
+    public function getCountRatings(): ?int
+    {
+        return $this->countRatings;
+    }
+
+    public function setCountRatings(?int $countRatings): self
+    {
+        $this->countRatings = $countRatings;
 
         return $this;
     }
