@@ -52,7 +52,7 @@ class Session
     private $sessionMembers;
 
     /**
-     * @ORM\OneToOne(targetEntity=Frage::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Frage::class)
      */
     private $frage;
 
