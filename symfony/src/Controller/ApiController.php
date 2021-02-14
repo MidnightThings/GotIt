@@ -70,19 +70,29 @@ class ApiController extends AbstractController
                 $sessionRepository = $entityManager->getRepository(Session::class);
                 $answerResult = $sessionRepository->getAnswers($token);
                 shuffle($answerResult);
-                $answerArray = array_slice($answerResult,0,3);
-                foreach($answerArray as $answer){
+                $counter = 0;
+                foreach($answerResult as $answer){
+                    if($counter == 3){
+                        break;
+                    }
+                    if($answer["id"] == ""){
+                        continue;
+                    }
+                    
                     $answerObject = $entityManager->getRepository(SessionMemberFrage::class)->find($answer["id"]);
                     $sessionMember->addTmpRateAnswer($answerObject);
+                    $entityManager->persist($sessionMember);
+                    $entityManager->flush();
+                    $answerArray[] = $answer;
+                    $counter = $counter + 1;
                 }
-                $entityManager->persist($sessionMember);
-                $entityManager->flush();
+                
             }else{
                 foreach($answerObject as $answer){
                     $answerArray[] = ["content" => $answer->getContent(), "id" => $answer->getId()];
                 }
             }
-
+            
             $answers = $answerArray;
         }
         $pollingArray = [
@@ -99,11 +109,13 @@ class ApiController extends AbstractController
      */
     public function courseSessionAnswer(EntityManagerInterface $entityManager, Request $request):Response
     {
+
         $requestContent = json_decode($request->getContent())->data;
         $frage = $entityManager->getRepository(Frage::class)->find($requestContent->questionId);
         if(!isset($frage)) {
             return new Response();
         }
+        
         $sessionMember =  $entityManager->getRepository(SessionMember::class)->find($requestContent->token);
         if(!isset($sessionMember)) {
             return new Response();
@@ -127,21 +139,24 @@ class ApiController extends AbstractController
     public function courseSessionRating(EntityManagerInterface $entityManager, Request $request):Response
     {
         $requestContent = json_decode($request->getContent())->data;
+        
         foreach($requestContent->ratings as $rating){
-            $sessionMemberFrage = $entityManager->getRepository(SessionMemberFrage::class)->find($rating["answerId"]);
+            $sessionMemberFrage = $entityManager->getRepository(SessionMemberFrage::class)->find($rating->answerId);
             if(!isset($sessionMemberFrage)){
                 return new Response();
             }
-            if($rating["rating"] == "-1"){
+            if($rating->rating == "-1"){
                 $sessionMemberFrage->setRating($sessionMemberFrage->getRating() - 1);
             }else{
-                $sessionMemberFrage->setRating($sessionMemberFrage->getRating() - 1);
+                $sessionMemberFrage->setRating($sessionMemberFrage->getRating() + 1);
             }
             $sessionMemberFrage->setRatingCount($sessionMemberFrage->getRatingCount() + 1);
+            $entityManager->persist($sessionMemberFrage);
+            $entityManager->flush();
         }
-
-        $session = $sessionMemberFrage->getSessionMember()[0]->getSession();
-        $session->setCountRating($session->getCountRating() + 1);
+        
+        $session = $sessionMemberFrage->getSessionMember()->getSession();
+        $session->setCountRatings($session->getCountRatings() + 1);
         $entityManager->persist($session);
         $entityManager->flush();
         return new Response();
