@@ -16,7 +16,7 @@ class CourseSelection extends AbstractController
 {
 
     /**
-     * @Route("/course", name="course")
+     * @Route("/", name="course")
      */
     public function course(EntityManagerInterface $entityManager): Response
     {
