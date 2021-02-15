@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller;
 
 use PhpParser\Node\Expr\Cast\Object_;
@@ -17,7 +16,7 @@ use App\Entity\Frage;
 class CourseOverviewController extends AbstractController
 {
     /**
-     * @Route("/course/{courseID}", name="courseOverview")
+     * @Route("/course/edit/{courseID}", name="courseOverview")
      */
     public function courseOverview($courseID, EntityManagerInterface $entityManager): Response
     {
