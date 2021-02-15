@@ -1,5 +1,5 @@
 .courseSelectionContainer, .courseOverviewContainer {
-    margin: 20px; /*TODO: better grid/positiong*/
+    margin: 20px;
 }
 
 .pageTitle {
@@ -7,8 +7,12 @@
     margin: 10px 0;
 }
 
+#courseName {
+    padding: 4px;
+}
+
 .btnContainer {
-    margin-bottom: 10px;
+    margin: 10px 0 5px;
 }
 
 .courseList, .questionList {
@@ -16,17 +20,59 @@
 }
 
 .course, .question {
-    padding: 20px 5px;
+    padding: 20px 0;
     width: 100%;
     border-bottom: 1px solid #cfcfcf;
 }
 
-.question {
-    padding: 0 5px;
+.questionList .questionLabels {
+    display: flex;
+    padding: 10px 0 10px 5px;
+    border-bottom: 1px solid #cfcfcf;
 }
 
-.questionContents{
-    width: 80%;
+.questionList .questionLabels .questionLabel-l {
+    flex: 70;
+}
+
+.questionList .questionLabels .questionLabel-r {
+    flex: 30;
+}
+
+.question {
+    display: flex;
+    justify-content: space-between;
+}
+
+.question input {
+    padding: 5px;
+}
+
+.question .questionSortOrder {
+    width: 6%;
+    padding-right: 0;
+}
+
+.question .question-l {
+    flex: 70;
+    margin-left: 5px;
+}
+
+.question .question-r {
+    flex: 30;
+    display: flex;
+}
+
+.question .actionButtons {
+    margin-left: 5px;
+}
+
+.question .actionButtons button {
+    height: 100%;
+}
+
+.questionContents {
+    width: 98%;
 }
 
 .inline{
@@ -41,9 +87,22 @@
     width: 100%;
 }
 
-button {
+.linkBtn {
+    border-radius: 2px;
+    padding: 3px 6px;
+    background-color: #438ea5;
+    border: 1px solid #cfcfcf;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+}
+
+.btn {
+    border-radius: 2px;
     padding: 4px 6px;
-    background-color: #67a772;
+    background-color: #438ea5;
     border: 1px solid #cfcfcf;
     color: #fff;
     font-size: 14px;
@@ -51,3 +110,10 @@ button {
     outline: none;
 }
 
+button.greenBtn {
+    background-color: #64bf8a;
+}
+
+button.redBtn {
+    background-color: #b64738;
+}

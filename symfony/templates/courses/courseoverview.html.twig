@@ -18,22 +18,33 @@
             <br>
             <div class="pageTitle inline">
                 <input id="courseName" type="text" onchange="changeCourseName({{ course.id }}, this.value)" value="{{ course.name }}">
-                <button onclick="changeCourseName({{ course.id }})">Change Name</button>
             </div>
             <div class="btnContainer inline">
-                <button id="startCourseBtn" onclick="startCourse({{ course.id }})">Start Course</button>
+                <button id="startCourseBtn" class="btn" onclick="startCourse({{ course.id }})">Start Course</button>
             </div>
         </span>
         <div class="btnContainer">
-            <button onclick="newQuestion({{ course.id }})" id="newQuestionBtn">+ New question</button>
+            <button id="newQuestionBtn" class="btn greenBtn defaultBtn" onclick="newQuestion({{ course.id }})">+ New question</button>
         </div>
         <div class="questionList">
+            <input id="courseNr" type="hidden" value="{{ course.id }}" />
+                <div class="questionLabels">
+                    <span class="questionLabel-l">Question</span>
+                    <span class="questionLabel-r">Sort Order</span>
+                </div>
+
                 {% for question in questions %}
-                    <div>
-                         <span id="question_{{ question.id }}" class="question">
-                            <input class="questionContents" type="text" onchange="changeQuestion({{ course.id }}, {{ question.id }}, this.value)" value="{{ question.content }}">
-                            <button id="questionBtn" onclick="deleteQuestion({{ course.id }}, {{ question.id }})">delete</button>
-                        </span>
+                    <div id="question_{{ question.id }}" class="question">
+                        <div class="question-l">
+                            <input class="questionContents" type="text" onchange="updateQuestion({{ course.id }}, {{ question.id }})" value="{{ question.content }}" />
+                        </div>
+
+                        <div class="question-r">
+                            <input class="questionSortOrder" type="number" onchange="updateQuestion({{ course.id }}, {{ question.id }})" value="{{ question.sortOrder|number_format }}" />
+                            <div class="actionButtons">
+                                <button id="questionBtn" class="btn redBtn" onclick="deleteQuestion({{ course.id }}, {{ question.id }})">delete</button>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
 
