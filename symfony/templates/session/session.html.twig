@@ -9,12 +9,38 @@
 </div>
 <div class="information">
   Fuer Teilnehmer eroeffnet!
+  <br>
   Status: {{status}}
 </div>
+<br>
 <a href="/session/{{code}}/next" class="next-step-btn">
   Next step
 </a>
 <div class="member-count">
-  Teilnehmer: 0
+  <span id="s-mem-count"></span>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+  let timeoutHandle = undefined;
+  let memCountSpan = undefined;
+
+  async function getActiveMembers() {
+    const response = await $.ajax('/session/members/{{sessionId}}', {method: 'GET'});
+    return response.sessionMembers;
+  };
+
+  async function memberCountCallback() {
+    const members = await getActiveMembers();
+    memCountSpan.textContent = `Teilnehmer: ${members}`;
+    timeoutHandle = setTimeout( memberCountCallback, 5000 );
+  };
+
+  window.onload = function () {
+    memCountSpan = document.getElementById('s-mem-count');
+    memCountSpan.textContent = 'Teilnehmer: ...';
+    memberCountCallback();
+  };
+</script>
 {% endblock %}
