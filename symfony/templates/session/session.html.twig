@@ -9,12 +9,68 @@
 </div>
 <div class="information">
   Fuer Teilnehmer eroeffnet!
+  <br>
   Status: {{status}}
 </div>
+<br>
 <a href="/session/{{code}}/next" class="next-step-btn">
   Next step
 </a>
 <div class="member-count">
-  Teilnehmer: 0
+  <span id="s-mem-count"></span>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+  let timeoutHandle = undefined;
+  let memCountSpan = undefined;
+
+  async function getActiveMembers() {
+    const response = await $.ajax('/session/members/{{sessionId}}', {method: 'GET'});
+    return response.sessionMembers;
+  };
+
+  async function getReceivedAnswers() {
+    const response = await $.ajax('/session/memberfrage/{{sessionId}}', {method: 'GET'});
+    return response.frageAnswered;
+  };
+
+  async function getReceivedRatings() {
+    const response = await $.ajax('/session/memberratings/{{sessionId}}', {method: 'GET'});
+    return response.ratingMembers;
+  };
+
+  async function memberCountCallback() {
+    const members = await getActiveMembers();
+    const status = '{{status}}';
+    let receivedContentCount = undefined;
+    let prefix = 'Teilnehmer:';
+    switch(status) {
+      case 'QUESTION': {
+        receivedContentCount = await getReceivedAnswers();
+        prefix = 'Beantwortet:';
+        break;
+      }
+      case 'RATE': {
+        receivedContentCount = await getReceivedRatings();
+        prefix = 'Bewertet:';
+        break;
+      }
+    }
+
+    memCountSpan.textContent = `${prefix} ${receivedContentCount ? receivedContentCount + '/' : ''}${members}`;
+    timeoutHandle = setTimeout( memberCountCallback, 5000 );
+  };
+
+  window.onload = function () {
+    memCountSpan = document.getElementById('s-mem-count');
+    memCountSpan.textContent = 'Berechne Teilnehmer: ...';
+    memberCountCallback();
+  };
+
+  window.onbeforeunload = function () {
+    if (timeoutHandle) clearTimeout(timeoutHandle);
+  }
+</script>
 {% endblock %}

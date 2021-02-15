@@ -38,7 +38,7 @@ class SessionController extends AbstractController
     {
         $session = $entityManager->getRepository(Session::class)->findOneBy(['code' => $code]);
         $sessionStatus = $session->getStatus();
-        return $this->render("session/session.html.twig", ['code' => $code, 'status' => $sessionStatus]);
+        return $this->render("session/session.html.twig", ['code' => $code, 'status' => $sessionStatus, 'sessionId' => $session->getId()]);
     }
 
     /**
