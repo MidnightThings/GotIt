@@ -8,8 +8,6 @@
 
 {% block javascripts %}
     <script src="/js/courseselection.js"></script>
-
-    
 {% endblock %}
 
 {% block body %}
@@ -20,16 +18,16 @@
         </div>
 
         <div class="btnContainer">
-            <button id="newCourseBtn" onclick="newCourse()">+ New course</button>
+            <button id="newCourseBtn" class="btn greenBtn" onclick="newCourse()">+ New course</button>
         </div>
 
         <div class="courseList">
             {% for course in courses %}
                 <div id="course_{{ course.id }}" class="course">
                     <span class="courseName">{{ course.name }}</span>
-                    <a href="/session/start/{{course.id}}">start</a>
-                    <button class="courseBtn" onclick="editCourse({{ course.id }})">edit</button>
-                    <button class="courseBtn" onclick="deleteCourse({{ course.id }})">delete</button>
+                    <button id="startCourseBtn" class="btn" onclick="startCourse({{ course.id }})">Start Course</button>
+                    <button class="btn courseBtn" onclick="editCourse({{ course.id }})">edit</button>
+                    <button class="btn redBtn courseBtn" onclick="deleteCourse({{ course.id }})">delete</button>
                 </div>
             {% endfor %}
         </div>
