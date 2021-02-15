@@ -12,11 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Kurs;
 
-class CourseSelection extends AbstractController
+class CourseSelectionController extends AbstractController
 {
 
     /**
-     * @Route("/", name="course")
+     * @Route("/course", name="course")
      */
     public function course(EntityManagerInterface $entityManager): Response
     {
@@ -26,7 +26,7 @@ class CourseSelection extends AbstractController
     }
 
     /**
-     * @Route("/course/add", name="addcourse")
+     * @Route("/course/add/", name="addcourse")
      */
     public function addCourse(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) : JsonResponse
     {
@@ -45,9 +45,9 @@ class CourseSelection extends AbstractController
     
 
     /**
-     * @Route("/course/edit/{courseID}", name="editcourse")
+     * @Route("/course/update/{courseID}", name="editcourse")
      */
-    public function editCourse(Request $request, $courseID, EntityManagerInterface $entityManager) : JsonResponse
+    public function updateCourse(Request $request, $courseID, EntityManagerInterface $entityManager) : JsonResponse
     {
         $course = $entityManager->getRepository(Kurs::class)->find($courseID);
         if (!$course) {
