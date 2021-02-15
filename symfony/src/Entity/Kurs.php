@@ -42,7 +42,7 @@ class Kurs
     private $Name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Frage::class, mappedBy="kurs")
+     * @ORM\OneToMany(targetEntity=Frage::class, mappedBy="kurs", cascade={"remove"})
      * @ORM\OrderBy({"sortorder" = "ASC"})
      */
     private $frages;
