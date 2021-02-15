@@ -1,76 +1,112 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link href="/css/session.css" rel="stylesheet" />
+  <link href="/css/session.css" rel="stylesheet"/>
 {% endblock %}
 {% block title %}Session in progress...{% endblock %}
 {% block body %}
-<div class="code-box">
-  {{code}}
-</div>
-<div class="information">
-  Fuer Teilnehmer eroeffnet!
+  <div class="code-box">
+    {{code}}
+  </div>
+  <div class="question-count">
+    Frage: {{ qCount }}
+  </div>
+  <div class="session-information">
+    <br>
+    Fuer Teilnehmer eroeffnet!
+    <br>
+    Status: {{status}}
+  </div>
+  <div class="information">
+    {% set value = status %}
+    {% if  value == 'QUESTION'%}
+      <div class="current-question">
+        {{ currentQuestion.content }}
+        <br>
+        ...wird beantwortet.
+      </div>
+    {% elseif  value == 'RATE'%}
+      <div class="current-question">
+        Warte auf Bewertungen...
+      </div>
+    {% elseif  value == 'IDLE'%}
+      <div class="current-question">
+        Warte auf den nächsten Schritt...
+      </div>
+    {% elseif  value == 'FINISH'%}
+      <div class="current-question">
+        Warte auf Beendigung des Kurses...
+      </div>
+    {% endif %}
+  </div>
   <br>
-  Status: {{status}}
-</div>
-<br>
-<a href="/session/{{code}}/next" class="next-step-btn">
-  Next step
-</a>
-<div class="member-count">
-  <span id="s-mem-count"></span>
-</div>
+  <div class="member-count">
+    <span id="s-mem-count"></span>
+  </div>
+  <div class="next-step-btn-container">
+    {% if  value == 'FINISH'%}
+      <a href="/" class="next-step-btn">
+        Return
+      </a>
+    {% else %}
+      <a href="/session/{{code}}/next" class="next-step-btn">
+        Next step
+      </a>
+    {% endif %}
+  </div>
+
+
 {% endblock %}
 
 {% block js %}
-<script>
-  let timeoutHandle = undefined;
-  let memCountSpan = undefined;
+  <script>
+    let timeoutHandle = undefined;
+    let memCountSpan = undefined;
 
-  async function getActiveMembers() {
-    const response = await $.ajax('/session/members/{{sessionId}}', {method: 'GET'});
-    return response.sessionMembers;
-  };
-
-  async function getReceivedAnswers() {
-    const response = await $.ajax('/session/memberfrage/{{sessionId}}', {method: 'GET'});
-    return response.frageAnswered;
-  };
-
-  async function getReceivedRatings() {
-    const response = await $.ajax('/session/memberratings/{{sessionId}}', {method: 'GET'});
-    return response.ratingMembers;
-  };
-
-  async function memberCountCallback() {
-    const members = await getActiveMembers();
-    const status = '{{status}}';
-    let receivedContentCount = undefined;
-    let prefix = 'Teilnehmer:';
-    switch(status) {
-      case 'QUESTION': {
-        receivedContentCount = await getReceivedAnswers();
-        prefix = 'Beantwortet:';
-        break;
-      }
-      case 'RATE': {
-        receivedContentCount = await getReceivedRatings();
-        prefix = 'Bewertet:';
-        break;
-      }
+    async function getActiveMembers() {
+      const response = await $.ajax('/session/members/{{sessionId}}', {method: 'GET'});
+      return response.sessionMembers;
     }
 
-    memCountSpan.textContent = `${prefix} ${receivedContentCount !== undefined ? receivedContentCount + '/' : ''}${members}`;
-    timeoutHandle = setTimeout( memberCountCallback, 5000 );
-  };
+    async function getReceivedAnswers() {
+      const response = await $.ajax('/session/memberfrage/{{sessionId}}', {method: 'GET'});
+      return response.frageAnswered;
+    }
 
-  window.onload = function () {
-    memCountSpan = document.getElementById('s-mem-count');
-    memCountSpan.textContent = 'Berechne Teilnehmer: ...';
-    memberCountCallback();
-  };
+    async function getReceivedRatings() {
+      const response = await $.ajax('/session/memberratings/{{sessionId}}', {method: 'GET'});
+      return response.ratingMembers;
+    }
 
-  window.onbeforeunload = function () {
-    if (timeoutHandle) clearTimeout(timeoutHandle);
-  }
-</script>
+    async function memberCountCallback() {
+      const members = await getActiveMembers();
+      const status = '{{status}}';
+      let receivedContentCount = undefined;
+      let prefix = 'Teilnehmer:';
+      switch(status) {
+        case 'QUESTION': {
+          receivedContentCount = await getReceivedAnswers();
+          prefix = 'Beantwortet:';
+          break;
+        }
+        case 'RATE': {
+          receivedContentCount = await getReceivedRatings();
+          prefix = 'Bewertet:';
+          break;
+        }
+      }
+
+      memCountSpan.textContent = `${prefix} ${receivedContentCount !== undefined ? receivedContentCount + '/' : ''}${members}`;
+      timeoutHandle = setTimeout( memberCountCallback, 5000 );
+    }
+
+    window.onload = function () {
+      memCountSpan = document.getElementById('s-mem-count');
+      memCountSpan.textContent = 'Berechne Teilnehmer: ...';
+      memberCountCallback();
+    };
+
+    window.onbeforeunload = function () {
+      if (timeoutHandle) clearTimeout(timeoutHandle);
+    }
+  </script>
 {% endblock %}
