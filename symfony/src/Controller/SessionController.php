@@ -38,7 +38,24 @@ class SessionController extends AbstractController
     {
         $session = $entityManager->getRepository(Session::class)->findOneBy(['code' => $code]);
         $sessionStatus = $session->getStatus();
-        return $this->render("session/session.html.twig", ['code' => $code, 'status' => $sessionStatus, 'sessionId' => $session->getId()]);
+        $currentQuestion = $session->getFrage();
+        $sessionQuestions = $session->getKurs()->getFrages();
+        $maxQuestionCount = count($sessionQuestions);
+        $answeredQuestionsCount = 0;
+        if ($sessionStatus == 'FINISH'){
+            $answeredQuestionsCount = $maxQuestionCount;
+        } elseif (isset($currentQuestion)){
+            $answeredQuestionsCount += 1;
+            foreach ($sessionQuestions as $question){
+                if ($question->getSortOrder() < $currentQuestion->getSortOrder()){
+                    $answeredQuestionsCount += 1;
+                    break;
+                }
+            }
+        }
+
+        $answeredQuestions = $answeredQuestionsCount.'/'.$maxQuestionCount;
+        return $this->render("session/session.html.twig", ['code' => $code, 'status' => $sessionStatus, 'sessionId' => $session->getId(), 'currentQuestion' => $currentQuestion, 'qCount' => $answeredQuestions]);
     }
 
     /**
