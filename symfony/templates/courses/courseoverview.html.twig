@@ -17,7 +17,7 @@
             <a href="/course">Back to course selection</a>
             <br>
             <div class="pageTitle inline">
-                <input id="courseName" type="text" onchange="changeCourseName({{ course.id }}, this.value)" value="{{ course.name }}">
+                <input id="courseName" type="text" onchange="updateCourseName({{ course.id }}, this.value)" value="{{ course.name }}">
             </div>
             <div class="btnContainer inline">
                 <button id="startCourseBtn" class="btn" onclick="startCourse({{ course.id }})">Start Course</button>
