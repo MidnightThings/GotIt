@@ -59,7 +59,7 @@
       }
     }
 
-    memCountSpan.textContent = `${prefix} ${receivedContentCount ? receivedContentCount + '/' : ''}${members}`;
+    memCountSpan.textContent = `${prefix} ${receivedContentCount !== undefined ? receivedContentCount + '/' : ''}${members}`;
     timeoutHandle = setTimeout( memberCountCallback, 5000 );
   };
 
