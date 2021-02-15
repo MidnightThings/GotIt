@@ -47,7 +47,6 @@ function changeQuestion(courseId, questionId, newString) {
 
 function changeCourseName(courseId, newName) {
     console.log('question: '+courseId+' changed')
-    newName = $('#courseName').val();
 
     $.ajax({
         url: 'http://localhost/course/edit/'+courseId,

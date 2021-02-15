@@ -17,7 +17,7 @@ use App\Entity\Frage;
 class CourseOverviewController extends AbstractController
 {
     /**
-     * @Route("/course/edit/{courseID}", name="courseOverview")
+     * @Route("/course/{courseID}", name="courseOverview")
      */
     public function courseOverview($courseID, EntityManagerInterface $entityManager): Response
     {
