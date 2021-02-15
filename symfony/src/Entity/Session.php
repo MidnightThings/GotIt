@@ -47,7 +47,7 @@ class Session
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity=SessionMember::class, mappedBy="session")
+     * @ORM\OneToMany(targetEntity=SessionMember::class, mappedBy="session", cascade={"remove"})
      */
     private $sessionMembers;
 

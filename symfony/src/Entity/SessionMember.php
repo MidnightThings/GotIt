@@ -37,7 +37,7 @@ class SessionMember
     private $session;
 
     /**
-     * @ORM\OneToMany(targetEntity=SessionMemberFrage::class, mappedBy="sessionmember")
+     * @ORM\OneToMany(targetEntity=SessionMemberFrage::class, mappedBy="sessionmember", cascade={"remove"})
      */
     private $sessionMemberFrages;
 

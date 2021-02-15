@@ -48,7 +48,7 @@ class Kurs
     private $frages;
 
     /**
-     * @ORM\OneToMany(targetEntity=Session::class, mappedBy="kurs")
+     * @ORM\OneToMany(targetEntity=Session::class, mappedBy="kurs", cascade={"remove"})
      */
     private $sessions;
 
