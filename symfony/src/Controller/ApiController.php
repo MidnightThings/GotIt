@@ -40,12 +40,6 @@ class ApiController extends AbstractController
      */
     public function courseSessionStatus($token, EntityManagerInterface $entityManager):JsonResponse
     {
-
-        /**
-         * 1. check session status
-         * 2. Build JSON
-         * 3. return JSON
-         */
         
         $sessionMember = $entityManager->getRepository(SessionMember::class)->find($token);
         $session = $sessionMember->getSession();
@@ -68,7 +62,7 @@ class ApiController extends AbstractController
             $answerObject = $sessionMember->getTmpRateAnswer();
             if(!count($answerObject)){
                 $sessionRepository = $entityManager->getRepository(Session::class);
-                $answerResult = $sessionRepository->getAnswers($token);
+                $answerResult = $sessionRepository->getAnswers($token, $session->getId());
                 shuffle($answerResult);
                 $counter = 0;
                 foreach($answerResult as $answer){
@@ -86,13 +80,12 @@ class ApiController extends AbstractController
                     $answerArray[] = $answer;
                     $counter = $counter + 1;
                 }
-                
+
             }else{
                 foreach($answerObject as $answer){
                     $answerArray[] = ["content" => $answer->getContent(), "id" => $answer->getId()];
                 }
             }
-            
             $answers = $answerArray;
         }
         $pollingArray = [
@@ -100,7 +93,6 @@ class ApiController extends AbstractController
                 "question" => $question,
                 "answers" => $answers
             ];
-
         return new JsonResponse($pollingArray);
     }
 

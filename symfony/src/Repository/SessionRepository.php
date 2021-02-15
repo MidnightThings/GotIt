@@ -20,13 +20,16 @@ class SessionRepository extends ServiceEntityRepository
         parent::__construct($registry, Session::class);
     }
 
-    public function getAnswers($userToken){
+    public function getAnswers($userToken, $sessionId){
         $qb = $this->createQueryBuilder("s");
         $qb->select("smf.content, smf.id");
         $qb->leftJoin("s.sessionMembers", "sm");
         $qb->leftJoin("sm.sessionMemberFrages", "smf");
-        $qb->where("sm.id != :userToken");
+        $qb->where("s.id = :sessionId");
+        $qb->andWhere("sm.id != :userToken");
+        $qb->andWhere("s.frage = smf.frage");
         $qb->setParameter("userToken", $userToken);
+        $qb->setParameter("sessionId", $sessionId);
         return $qb->getQuery()->getResult();
     }
 
