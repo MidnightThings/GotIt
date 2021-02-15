@@ -30,6 +30,17 @@ class SessionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getCountFrageAnswered($sessionId){
+        $qb = $this->createQueryBuilder("s");
+        $qb->select("COUNT(smf) AS count");
+        $qb->leftJoin("s.sessionMembers", "sm");
+        $qb->leftJoin("sm.sessionMemberFrages", "smf");
+        $qb->where("s.id = :sessionId");
+        $qb->andWhere("s.frage = smf.frage");
+        $qb->setParameter("sessionId", $sessionId);
+        return $qb->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Session[] Returns an array of Session objects
     //  */

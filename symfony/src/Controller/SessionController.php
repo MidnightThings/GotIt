@@ -105,14 +105,10 @@ class SessionController extends AbstractController
      */
     public function getFrageAnsweredMembers($sessionId, EntityManagerInterface $entityManager):JsonResponse
     {
-        $countFrageAnswered = 0;
-        $courseSession = $entityManager->getRepository(Session::class)->find($sessionId);
-        if(isset($courseSession)){
-            $activeQuestion = $courseSession->getFrage();
-            $countFrageAnswered = count($activeQuestion->getSessionMemberFrages());
-        }
+        $sessionRepository = $entityManager->getRepository(Session::class);
+        $countFrageAnswered = $sessionRepository->getCountFrageAnswered($sessionId);
 
-        return new JsonResponse(["frageAnswered" => $countFrageAnswered]);
+        return new JsonResponse(["frageAnswered" => $countFrageAnswered[0]["count"]]);
     }
 
     /**
