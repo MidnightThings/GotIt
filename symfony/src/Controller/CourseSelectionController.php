@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Kurs;
 
-class CourseSelection extends AbstractController
+class CourseSelectionController extends AbstractController
 {
 
     /**
