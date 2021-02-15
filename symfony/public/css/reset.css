@@ -26,3 +26,22 @@ body {
 ol, ul {
 	list-style: none;
 }
+
+/** default styling **/
+.btn {
+    padding: 4px 6px;
+    background-color: #67a772;
+    border: 1px solid #cfcfcf;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}
+
+button.greenBtn {
+    background-color: #67a772;
+}
+
+button.redBtn {
+    background-color: #b64738;
+}
