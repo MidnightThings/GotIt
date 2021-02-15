@@ -14,8 +14,11 @@
 {% block body %}
     <div class="courseOverviewContainer">
         <span class="titleContainer">
+            <a href="/course">Back to course selection</a>
+            <br>
             <div class="pageTitle inline">
-                <input type="text" onchange="changeCourseName({{ course.id }}, this.value)" value="{{ course.name }}">
+                <input id="courseName" type="text" onchange="changeCourseName({{ course.id }}, this.value)" value="{{ course.name }}">
+                <button onclick="changeCourseName({{ course.id }})">Change Name</button>
             </div>
             <div class="btnContainer inline">
                 <button id="startCourseBtn" onclick="startCourse({{ course.id }})">Start Course</button>
