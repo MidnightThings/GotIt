@@ -67,18 +67,16 @@ class SessionController extends AbstractController
         $sessionQuestion = $session->getFrage();
         $course = $session->getKurs();
         $courseQuestions = $course->getFrages();
-
         if(!isset($sessionQuestion)) {
             $sessionQuestion = $courseQuestions[0];
             $session->setFrage($sessionQuestion);
             $session->setStatus('QUESTION');
         } else if ($sessionStatus === 'IDLE') {
-            $nextOrder = $sessionQuestion->getSortorder() + 1;
             $nextQuestion = null;
-            foreach($courseQuestions as $courseQuestion) {
-                if($courseQuestion->getSortorder() == $nextOrder) {
-                    $nextQuestion = $courseQuestion;
-                    break;
+            $currentID = $sessionQuestion->getId();
+            for ($i = 0; $i < count($courseQuestions); $i++){
+                if ($courseQuestions[$i]->getId() == $currentID){
+                    $nextQuestion = $courseQuestions[$i+1];
                 }
             }
             if(isset($nextQuestion)) {
