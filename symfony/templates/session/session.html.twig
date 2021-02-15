@@ -42,5 +42,9 @@
     memCountSpan.textContent = 'Teilnehmer: ...';
     memberCountCallback();
   };
+
+  window.onbeforeunload = function () {
+    if (timeoutHandle) clearTimeout(timeoutHandle);
+  }
 </script>
 {% endblock %}
