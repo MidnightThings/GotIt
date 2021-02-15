@@ -26,6 +26,21 @@ class CourseOverviewController extends AbstractController
     }
 
     /**
+     * @Route("/course/name/{courseID}", name="updateCourseName")
+     */
+    public function updateCourseName($courseID, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $course = $entityManager->getRepository(Kurs::class)->find($courseID);
+        $course->setName($request->getContent());
+        
+        $entityManager->persist($course);
+        $entityManager->flush();
+        $response = new Response();
+        $response->setStatusCode(200);
+        return $response;
+    }
+
+    /**
      * @Route("/question/add/{courseID}", name="addQuestion")
      */
     public function addQuestion($courseID, EntityManagerInterface $entityManager): Response
@@ -39,23 +54,29 @@ class CourseOverviewController extends AbstractController
 
         $question->setKurs($course);
         $question->setContent("");
+        $question->setSortorder(0);
         $entityManager->persist($question);
         $entityManager->flush();
         $response = new Response();
         $response->setStatusCode(200);
         return $response;
     }
+
     /**
      * @Route("/question/edit/{courseID}/{questionID}", name="editQuestion")
      */
     public function editQuestion($courseID, $questionID, EntityManagerInterface $entityManager, Request $request): Response
     {
-        $entityManager->getRepository(Frage::class)->find($questionID)->setContent($request->getContent());
+        $question = $entityManager->getRepository(Frage::class)->find($questionID);
+        $question->setContent($request->get('questionContent'));
+        $question->setSortorder($request->get('sortOrderValue'));
+
         $entityManager->flush();
         $response = new Response();
         $response->setStatusCode(200);
         return $response;
     }
+
     /**
      * @Route("/question/delete/{courseID}/{questionID}", name="deleteQuestion")
      */
