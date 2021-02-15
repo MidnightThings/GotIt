@@ -15,6 +15,42 @@
     margin: 10px 0 5px;
 }
 
+.course .editBtn {
+    margin: 0 5px;
+}
+
+.course {
+    display: flex;
+    justify-content: start;
+}
+
+.course input {
+    padding: 5px;
+}
+
+.course .courseSortOrder {
+    width: 6%;
+    padding-right: 0;
+}
+
+.course .course-l {
+    line-height: 2;
+    min-width: 8%;
+    margin-left: 0 25px 0 5px;
+}
+
+.course .course-r {
+    display: flex;
+}
+
+.course .actionButtons {
+    margin-left: 5px;
+}
+
+.course .actionButtons button {
+    height: 100%;
+}
+
 .courseList, .questionList {
     border: 1px solid #cfcfcf;
 }
