@@ -26,7 +26,7 @@ class CourseSelection extends AbstractController
     }
 
     /**
-     * @Route("/course/add/", name="addcourse")
+     * @Route("/course/add", name="addcourse")
      */
     public function addCourse(Request $request, TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager) : JsonResponse
     {
@@ -45,9 +45,9 @@ class CourseSelection extends AbstractController
     
 
     /**
-     * @Route("/course/update/{courseID}", name="editcourse")
+     * @Route("/course/edit/{courseID}", name="editcourse")
      */
-    public function updateCourse(Request $request, $courseID, EntityManagerInterface $entityManager) : JsonResponse
+    public function editCourse(Request $request, $courseID, EntityManagerInterface $entityManager) : JsonResponse
     {
         $course = $entityManager->getRepository(Kurs::class)->find($courseID);
         if (!$course) {
