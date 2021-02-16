@@ -87,6 +87,15 @@ class ApiController extends AbstractController
                 }
             }
             $answers = $answerArray ?? [];
+        }elseif($status == "IDLE"){
+            $sessionMembers = $session->getSessionMembers();
+            $session->setCountRatings(0);
+            $entityManager->persist($session);
+            $entityManager->flush();
+
+            foreach($sessionMembers as $member){
+                $entityManager->getConnection()->executeQuery('delete FROM session_member_session_member_frage WHERE session_member_id = ' . $member->getId());
+            }
         }
         $pollingArray = [
                 "status" => $status,
