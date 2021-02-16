@@ -86,7 +86,7 @@ class ApiController extends AbstractController
                     $answerArray[] = ["content" => $answer->getContent(), "id" => $answer->getId()];
                 }
             }
-            $answers = $answerArray;
+            $answers = $answerArray ?? [];
         }
         $pollingArray = [
                 "status" => $status,
